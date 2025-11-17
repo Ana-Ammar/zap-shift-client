@@ -30,7 +30,6 @@ const Brands = () => {
         We've helped thousands of sales teams
       </h1>
       <Swiper
-        loop={true}
         slidesPerView={4}
         centeredSlides={true}
         autoplay={{
