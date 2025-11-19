@@ -1,10 +1,26 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { useForm } from "react-hook-form";
 import { FaBoxOpen, FaUser, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
+import { AuthContext } from "../../AuthProvider/AuthContext";
 
 const AddParcel = () => {
+  const { user } = useContext(AuthContext);
   const [parcelType, setParcelType] = useState("Document");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const handleAddParcel = (data) => {
+    console.log(data);
+  };
+
   return (
-    <div className="my-8 mx-auto p-16 bg-base-100 shadow-lg rounded-2xl">
+    <form
+      onSubmit={handleSubmit(handleAddParcel)}
+      className="my-8 mx-auto p-16 bg-base-100 shadow-lg rounded-2xl"
+    >
       <h2 className="font-bold text-5xl pb-4">Add Parcel</h2>
       <hr className="text-gray-200 my-8"></hr>
 
@@ -17,7 +33,7 @@ const AddParcel = () => {
             <span>Document</span>
             <input
               type="radio"
-              name="parcelType"
+              {...register("parcelType", { required: true })}
               value="Document"
               checked={parcelType === "Document"}
               onChange={() => setParcelType("Document")}
@@ -28,7 +44,7 @@ const AddParcel = () => {
             <span>Non-Document</span>
             <input
               type="radio"
-              name="parcelType"
+              {...register("parcelType", { required: true })}
               value="Non-Document"
               checked={parcelType === "Non-Document"}
               onChange={() => setParcelType("Non-Document")}
@@ -42,6 +58,7 @@ const AddParcel = () => {
             <label className="font-medium text-sm">Parcel Name</label>
             <input
               type="text"
+              {...register("parcelName", { required: true })}
               placeholder="Parcel Name"
               className="input-field"
             />
@@ -51,6 +68,7 @@ const AddParcel = () => {
             <label className="font-medium text-sm">Parcel Weight (KG)</label>
             <input
               type="number"
+              {...register("parcelWeight", { required: true })}
               placeholder="Parcel Weight (kg)"
               className="input-field"
             />
@@ -69,6 +87,7 @@ const AddParcel = () => {
               <label className="font-medium text-sm">Sender Name</label>
               <input
                 type="text"
+                {...register("senderName", { required: true })}
                 placeholder="Sender Name"
                 className="input-field"
               />
@@ -78,7 +97,10 @@ const AddParcel = () => {
               <label className="font-medium text-sm">
                 Sender Pickup Wire house
               </label>
-              <select className="input-field">
+              <select
+                {...register("senderPickupWirehouse", { required: true })}
+                className="input-field"
+              >
                 <option disabled selected>
                   Sender Pickup Wire House
                 </option>
@@ -89,13 +111,19 @@ const AddParcel = () => {
 
             <fieldset className="flex flex-col gap-1">
               <label className="font-medium text-sm">Address</label>
-              <input type="tel" placeholder="Address" className="input-field" />
+              <input
+                type="tel"
+                {...register("senderAddress", { required: true })}
+                placeholder="Address"
+                className="input-field"
+              />
             </fieldset>
 
             <fieldset className="flex flex-col gap-1">
               <label className="font-medium text-sm">Sender Contact No</label>
               <input
                 type="text"
+                {...register("senderContactNo", { required: true })}
                 placeholder="Sender Contact No"
                 className="input-field"
               />
@@ -104,7 +132,10 @@ const AddParcel = () => {
 
           <fieldset className="flex flex-col gap-1">
             <label className="font-medium text-sm">Sender Region</label>
-            <select className="input-field">
+            <select
+              className="input-field"
+              {...register("senderRegion", { required: true })}
+            >
               <option disabled selected>
                 Select Region
               </option>
@@ -117,6 +148,7 @@ const AddParcel = () => {
             <label className="font-medium text-sm">Pickup Instruction</label>
             <textarea
               placeholder="Pickup Instruction"
+              {...register("senderInstruction")}
               className="input-field"
               rows={4}
             />
@@ -125,13 +157,14 @@ const AddParcel = () => {
 
         {/* Receiver Details */}
 
-         <div className="mb-6 space-y-6">
+        <div className="mb-6 space-y-6">
           <h3 className="text-lg font-semibold mb-7">Receiver Details</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <fieldset className="flex flex-col gap-1">
               <label className="font-medium text-sm">Receiver Name</label>
               <input
                 type="text"
+                {...register("receiverName", { required: true })}
                 placeholder="Receiver Name"
                 className="input-field"
               />
@@ -141,7 +174,10 @@ const AddParcel = () => {
               <label className="font-medium text-sm">
                 Receiver Pickup Wirehouse
               </label>
-              <select className="input-field">
+              <select
+                className="input-field"
+                {...register("receiverPickupWirehouse", { required: true })}
+              >
                 <option disabled selected>
                   Receiver Pickup WireHouse
                 </option>
@@ -152,13 +188,19 @@ const AddParcel = () => {
 
             <fieldset className="flex flex-col gap-1">
               <label className="font-medium text-sm">Address</label>
-              <input type="tel" placeholder="Address" className="input-field" />
+              <input
+                type="tel"
+                {...register("receiverAddress", { required: true })}
+                placeholder="Address"
+                className="input-field"
+              />
             </fieldset>
 
             <fieldset className="flex flex-col gap-1">
               <label className="font-medium text-sm">Receiver Contact No</label>
               <input
                 type="text"
+                {...register("receiverContactNo", { required: true })}
                 placeholder="Receiver Contact No"
                 className="input-field"
               />
@@ -167,7 +209,10 @@ const AddParcel = () => {
 
           <fieldset className="flex flex-col gap-1">
             <label className="font-medium text-sm">Receiver Region</label>
-            <select className="input-field">
+            <select
+              className="input-field"
+              {...register("receiverRegion", { required: true })}
+            >
               <option disabled selected>
                 Select Region
               </option>
@@ -179,21 +224,21 @@ const AddParcel = () => {
           <fieldset className="flex flex-col gap-1">
             <label className="font-medium text-sm">Pickup Instruction</label>
             <textarea
+              {...register("receiverInstruction")}
               placeholder="Pickup Instruction"
               className="input-field"
               rows={4}
             />
           </fieldset>
         </div>
-
       </div>
 
       {/* Footer */}
-       <div className="text-sm text-gray-500 my-8">* Pickup Time 4pm–7pm Approx.</div>
-      <button className="button">
-        Proceed to Confirm Booking
-      </button>
-    </div>
+      <div className="text-sm text-gray-500 my-8">
+        * Pickup Time 4pm–7pm Approx.
+      </div>
+      <button className="button">Proceed to Confirm Booking</button>
+    </form>
   );
 };
 
