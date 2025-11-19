@@ -41,7 +41,7 @@ const Navbar = () => {
         <NavLink>Blog</NavLink>
       </li>
       <li>
-        <NavLink>Contact</NavLink>
+        <NavLink to="/add-parcel">Add parcel</NavLink>
       </li>
     </>
   );

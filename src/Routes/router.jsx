@@ -5,6 +5,7 @@ import Coverage from "../Pages/Coverage/Coverage";
 import AuthLayout from "../Layouts/AuthLayout";
 import Login from "../Pages/Auth/Login";
 import Register from "../Pages/Auth/Register";
+import AddParcel from "../Pages/Add_Parcel/AddParcel";
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ export const router = createBrowserRouter([
       {
         path: "/coverage",
         element: <Coverage />
+      },
+      {
+        path: "/add-parcel",
+        element: <AddParcel />
       }
     ],
   },
