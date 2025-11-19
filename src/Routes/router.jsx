@@ -22,6 +22,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/add-parcel",
+        loader: () => fetch('/warehouses.json'),
         element: <AddParcel />
       }
     ],

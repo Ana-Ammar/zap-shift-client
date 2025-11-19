@@ -1,7 +1,8 @@
-import { useContext, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useContext, useEffect, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { FaBoxOpen, FaUser, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 import { AuthContext } from "../../AuthProvider/AuthContext";
+import { useLoaderData } from "react-router";
 
 const AddParcel = () => {
   const { user } = useContext(AuthContext);
@@ -9,8 +10,21 @@ const AddParcel = () => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm();
+  const senderRegion = useWatch({ control, name: "senderRegion" });
+  const receiverRegion = useWatch({ control, name: "receiverRegion" });
+
+  const centers = useLoaderData();
+  const regions = centers.map((r) => r.region);
+  const convertedRegions = [...new Set(regions)];
+
+  const wirehouseByRegion = (region) => {
+    const wirehouseByRegion = centers.filter((c) => c.region === region);
+    const wirehouses = wirehouseByRegion.map((w) => w.district);
+    return wirehouses;
+  };
 
   const handleAddParcel = (data) => {
     console.log(data);
@@ -94,54 +108,58 @@ const AddParcel = () => {
             </fieldset>
 
             <fieldset className="flex flex-col gap-1">
-              <label className="font-medium text-sm">
-                Sender Pickup Wire house
-              </label>
-              <select
-                {...register("senderPickupWirehouse", { required: true })}
+              <label className="font-medium text-sm">Sender Email</label>
+              <input
+                type="text"
+                {...register("senderEmail", { required: true })}
+                placeholder="Sender Email"
                 className="input-field"
+              />
+            </fieldset>
+
+            <fieldset className="flex flex-col gap-1">
+              <label className="font-medium text-sm">Sender Region</label>
+              <select
+              defaultValue="Select Region"
+                className="input-field"
+                {...register("senderRegion", { required: true })}
               >
-                <option disabled selected>
-                  Sender Pickup Wire House
+                <option defaultValue="Select Region">
+                  Select Region
                 </option>
-                <option>Warehouse A</option>
-                <option>Warehouse B</option>
+                {convertedRegions.map((r, i) => (
+                  <option key={i} value={r}>{r}</option>
+                ))}
               </select>
             </fieldset>
 
             <fieldset className="flex flex-col gap-1">
-              <label className="font-medium text-sm">Address</label>
-              <input
-                type="tel"
-                {...register("senderAddress", { required: true })}
-                placeholder="Address"
+              <label className="font-medium text-sm">Sender District</label>
+              <select
+              defaultValue="Select District"
+                {...register("senderDistrict", { required: true })}
                 className="input-field"
-              />
-            </fieldset>
-
-            <fieldset className="flex flex-col gap-1">
-              <label className="font-medium text-sm">Sender Contact No</label>
-              <input
-                type="text"
-                {...register("senderContactNo", { required: true })}
-                placeholder="Sender Contact No"
-                className="input-field"
-              />
+              >
+                <option defaultValue="Select District">
+                  Select District
+                </option>
+                {wirehouseByRegion(senderRegion).map((d, ind) => (
+                  <option key={ind} value={d}>
+                    {d}
+                  </option>
+                ))}
+              </select>
             </fieldset>
           </div>
 
           <fieldset className="flex flex-col gap-1">
-            <label className="font-medium text-sm">Sender Region</label>
-            <select
+            <label className="font-medium text-sm">Address</label>
+            <input
+              type="tel"
+              {...register("senderAddress", { required: true })}
+              placeholder="Address"
               className="input-field"
-              {...register("senderRegion", { required: true })}
-            >
-              <option disabled selected>
-                Select Region
-              </option>
-              <option>North</option>
-              <option>South</option>
-            </select>
+            />
           </fieldset>
 
           <fieldset className="flex flex-col gap-1">
@@ -171,54 +189,60 @@ const AddParcel = () => {
             </fieldset>
 
             <fieldset className="flex flex-col gap-1">
-              <label className="font-medium text-sm">
-                Receiver Pickup Wirehouse
-              </label>
-              <select
+              <label className="font-medium text-sm">Receiver Email</label>
+              <input
+                type="text"
+                {...register("receiverEmail", { required: true })}
+                placeholder="Receiver Email"
                 className="input-field"
-                {...register("receiverPickupWirehouse", { required: true })}
+              />
+            </fieldset>
+
+            <fieldset className="flex flex-col gap-1">
+              <label className="font-medium text-sm">Receiver Region</label>
+              <select
+              defaultValue="Select Region"
+                className="input-field"
+                {...register("receiverRegion", { required: true })}
               >
-                <option disabled selected>
-                  Receiver Pickup WireHouse
+                <option defaultValue="Select Region">
+                  Select Region
                 </option>
-                <option>Warehouse A</option>
-                <option>Warehouse B</option>
+                {convertedRegions.map((r, i) => (
+                  <option key={i} value={r}>{r}</option>
+                ))}
               </select>
             </fieldset>
 
             <fieldset className="flex flex-col gap-1">
-              <label className="font-medium text-sm">Address</label>
-              <input
-                type="tel"
-                {...register("receiverAddress", { required: true })}
-                placeholder="Address"
+              <label className="font-medium text-sm">
+                Receiver District
+              </label>
+              <select
+              defaultValue="Select District"
                 className="input-field"
-              />
-            </fieldset>
-
-            <fieldset className="flex flex-col gap-1">
-              <label className="font-medium text-sm">Receiver Contact No</label>
-              <input
-                type="text"
-                {...register("receiverContactNo", { required: true })}
-                placeholder="Receiver Contact No"
-                className="input-field"
-              />
+                {...register("receiverDstrict", { required: true })}
+              >
+                <option defaultValue="Select District">
+                  Select District
+                </option>
+                {wirehouseByRegion(receiverRegion).map((d, ind) => (
+                  <option key={ind} value={d}>
+                    {d}
+                  </option>
+                ))}
+              </select>
             </fieldset>
           </div>
 
           <fieldset className="flex flex-col gap-1">
-            <label className="font-medium text-sm">Receiver Region</label>
-            <select
+            <label className="font-medium text-sm">Address</label>
+            <input
+              type="tel"
+              {...register("receiverAddress", { required: true })}
+              placeholder="Address"
               className="input-field"
-              {...register("receiverRegion", { required: true })}
-            >
-              <option disabled selected>
-                Select Region
-              </option>
-              <option>North</option>
-              <option>South</option>
-            </select>
+            />
           </fieldset>
 
           <fieldset className="flex flex-col gap-1">
