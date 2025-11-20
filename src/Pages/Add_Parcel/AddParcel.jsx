@@ -3,11 +3,12 @@ import { useForm, useWatch } from "react-hook-form";
 import { FaBoxOpen, FaUser, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 import { AuthContext } from "../../AuthProvider/AuthContext";
 import { useLoaderData } from "react-router";
-import chat from "daisyui/components/chat";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const AddParcel = () => {
   const { user } = useContext(AuthContext);
+  const axiosSecure = useAxiosSecure();
   const [parcelType, setParcelType] = useState("Document");
   const {
     register,
@@ -54,11 +55,14 @@ const AddParcel = () => {
       confirmButtonText: "Yes, Continue",
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log(charge)
-        Swal.fire({
-          title: "Order confirmed",
-          text: "Delivery proccess will be start soon.",
-          icon: "success",
+        axiosSecure.post("/parcels", data).then((res) => {
+          if (res.data.insertedId) {
+            Swal.fire({
+              title: "Order confirmed",
+              text: "Delivery proccess will be start soon.",
+              icon: "success",
+            });
+          }
         });
       }
     });
@@ -141,6 +145,7 @@ const AddParcel = () => {
               <label className="font-medium text-sm">Sender Name</label>
               <input
                 type="text"
+                defaultValue={user?.displayName}
                 {...register("senderName", { required: true })}
                 placeholder="Sender Name"
                 className="input-field"
@@ -154,6 +159,7 @@ const AddParcel = () => {
               <label className="font-medium text-sm">Sender Email</label>
               <input
                 type="text"
+                defaultValue={user?.email}
                 {...register("senderEmail", { required: true })}
                 placeholder="Sender Email"
                 className="input-field"
