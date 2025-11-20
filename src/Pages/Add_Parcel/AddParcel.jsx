@@ -1,8 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { FaBoxOpen, FaUser, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 import { AuthContext } from "../../AuthProvider/AuthContext";
 import { useLoaderData } from "react-router";
+import chat from "daisyui/components/chat";
+import Swal from "sweetalert2";
 
 const AddParcel = () => {
   const { user } = useContext(AuthContext);
@@ -27,7 +29,39 @@ const AddParcel = () => {
   };
 
   const handleAddParcel = (data) => {
-    console.log(data);
+    let charge = 0;
+    if (data.parcelType === "Document") {
+      charge = data.senderDistrict === data.receiverDistrict ? 60 : 80;
+    } else {
+      let parcelWeight = parseFloat(data.parcelWeight);
+      if (parcelWeight <= 3) {
+        charge = data.senderDistrict === data.receiverDistrict ? 110 : 150;
+      } else {
+        let extraWeight = parcelWeight - 3;
+        charge =
+          data.senderDistrict === data.receiverDistrict
+            ? 110 + extraWeight * 40
+            : 150 + extraWeight * 40 + 40;
+      }
+    }
+    Swal.fire({
+      title: "Agree with delivery charge?",
+      text: `You have to pay ${charge}`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Continue",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log(charge)
+        Swal.fire({
+          title: "Order confirmed",
+          text: "Delivery proccess will be start soon.",
+          icon: "success",
+        });
+      }
+    });
   };
 
   return (
@@ -76,6 +110,9 @@ const AddParcel = () => {
               placeholder="Parcel Name"
               className="input-field"
             />
+            {errors.parcelName?.type === "required" && (
+              <p className="text-red-500">Parcel name is required</p>
+            )}
           </fieldset>
 
           <fieldset className="flex flex-col gap-1 mb-3">
@@ -86,6 +123,9 @@ const AddParcel = () => {
               placeholder="Parcel Weight (kg)"
               className="input-field"
             />
+            {errors.parcelWeight?.type === "required" && (
+              <p className="text-red-500">Parcel Weight is required</p>
+            )}
           </fieldset>
         </div>
       </div>
@@ -105,6 +145,9 @@ const AddParcel = () => {
                 placeholder="Sender Name"
                 className="input-field"
               />
+              {errors.senderName?.type === "required" && (
+                <p className="text-red-500">Sender name is required</p>
+              )}
             </fieldset>
 
             <fieldset className="flex flex-col gap-1">
@@ -115,40 +158,47 @@ const AddParcel = () => {
                 placeholder="Sender Email"
                 className="input-field"
               />
+              {errors.senderEmail?.type === "required" && (
+                <p className="text-red-500">Sender Email is required</p>
+              )}
             </fieldset>
 
             <fieldset className="flex flex-col gap-1">
               <label className="font-medium text-sm">Sender Region</label>
               <select
-              defaultValue="Select Region"
+                defaultValue="Select Region"
                 className="input-field"
                 {...register("senderRegion", { required: true })}
               >
-                <option defaultValue="Select Region">
-                  Select Region
-                </option>
+                <option defaultValue="Select Region">Select Region</option>
                 {convertedRegions.map((r, i) => (
-                  <option key={i} value={r}>{r}</option>
+                  <option key={i} value={r}>
+                    {r}
+                  </option>
                 ))}
               </select>
+              {errors.senderRegion?.type === "required" && (
+                <p className="text-red-500">Sender Region is required</p>
+              )}
             </fieldset>
 
             <fieldset className="flex flex-col gap-1">
               <label className="font-medium text-sm">Sender District</label>
               <select
-              defaultValue="Select District"
+                defaultValue="Select District"
                 {...register("senderDistrict", { required: true })}
                 className="input-field"
               >
-                <option defaultValue="Select District">
-                  Select District
-                </option>
+                <option defaultValue="Select District">Select District</option>
                 {wirehouseByRegion(senderRegion).map((d, ind) => (
                   <option key={ind} value={d}>
                     {d}
                   </option>
                 ))}
               </select>
+              {errors.senderDistrict?.type === "required" && (
+                <p className="text-red-500">Select District is required</p>
+              )}
             </fieldset>
           </div>
 
@@ -160,6 +210,9 @@ const AddParcel = () => {
               placeholder="Address"
               className="input-field"
             />
+            {errors.senderAddress?.type === "required" && (
+              <p className="text-red-500">Sender Address is required</p>
+            )}
           </fieldset>
 
           <fieldset className="flex flex-col gap-1">
@@ -186,6 +239,9 @@ const AddParcel = () => {
                 placeholder="Receiver Name"
                 className="input-field"
               />
+              {errors.receiverName?.type === "required" && (
+                <p className="text-red-500">Receiver Name is required</p>
+              )}
             </fieldset>
 
             <fieldset className="flex flex-col gap-1">
@@ -196,42 +252,47 @@ const AddParcel = () => {
                 placeholder="Receiver Email"
                 className="input-field"
               />
+              {errors.receiverEmail?.type === "required" && (
+                <p className="text-red-500">Receiver Email is required</p>
+              )}
             </fieldset>
 
             <fieldset className="flex flex-col gap-1">
               <label className="font-medium text-sm">Receiver Region</label>
               <select
-              defaultValue="Select Region"
+                defaultValue="Select Region"
                 className="input-field"
                 {...register("receiverRegion", { required: true })}
               >
-                <option defaultValue="Select Region">
-                  Select Region
-                </option>
+                <option defaultValue="Select Region">Select Region</option>
                 {convertedRegions.map((r, i) => (
-                  <option key={i} value={r}>{r}</option>
+                  <option key={i} value={r}>
+                    {r}
+                  </option>
                 ))}
               </select>
+              {errors.receiverRegion?.type === "required" && (
+                <p className="text-red-500">Receiver Region is required</p>
+              )}
             </fieldset>
 
             <fieldset className="flex flex-col gap-1">
-              <label className="font-medium text-sm">
-                Receiver District
-              </label>
+              <label className="font-medium text-sm">Receiver District</label>
               <select
-              defaultValue="Select District"
+                defaultValue="Select District"
                 className="input-field"
-                {...register("receiverDstrict", { required: true })}
+                {...register("receiverDistrict", { required: true })}
               >
-                <option defaultValue="Select District">
-                  Select District
-                </option>
+                <option defaultValue="Select District">Select District</option>
                 {wirehouseByRegion(receiverRegion).map((d, ind) => (
                   <option key={ind} value={d}>
                     {d}
                   </option>
                 ))}
               </select>
+              {errors.receiverDistrict?.type === "required" && (
+                <p className="text-red-500">Receiver District is required</p>
+              )}
             </fieldset>
           </div>
 
@@ -243,6 +304,9 @@ const AddParcel = () => {
               placeholder="Address"
               className="input-field"
             />
+            {errors.receiverAddress?.type === "required" && (
+              <p className="text-red-500">Receiver Address is required</p>
+            )}
           </fieldset>
 
           <fieldset className="flex flex-col gap-1">
