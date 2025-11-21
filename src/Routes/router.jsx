@@ -6,6 +6,8 @@ import AuthLayout from "../Layouts/AuthLayout";
 import Login from "../Pages/Auth/Login";
 import Register from "../Pages/Auth/Register";
 import AddParcel from "../Pages/Add_Parcel/AddParcel";
+import Dashboard from "../Layouts/Dashboard";
+import AllDeliveries from "../Pages/Dashboard/AllDeliveries";
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +40,16 @@ export const router = createBrowserRouter([
       {
         path: "/register",
         element: <Register />
+      }
+    ]
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard />,
+    children: [
+      {
+        path: "all-deliveries",
+        element: <AllDeliveries />
       }
     ]
   }

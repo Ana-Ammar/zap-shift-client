@@ -28,3 +28,7 @@ body {
 .button {
   @apply py-2 px-4 font-medium rounded-md bg-primary active:scale-y-90 transition-transform duration-200 hover:bg-primary/70 cursor-pointer;
 }
+
+a.active {
+  @apply bg-primary
+}

@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { FaBoxOpen, FaUser, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 import { AuthContext } from "../../AuthProvider/AuthContext";
 import { useLoaderData } from "react-router";
 import Swal from "sweetalert2";
@@ -10,26 +9,34 @@ const AddParcel = () => {
   const { user } = useContext(AuthContext);
   const axiosSecure = useAxiosSecure();
   const [parcelType, setParcelType] = useState("Document");
+
+  // react form hook
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
   } = useForm();
+
+  // Region watch
   const senderRegion = useWatch({ control, name: "senderRegion" });
   const receiverRegion = useWatch({ control, name: "receiverRegion" });
 
+  // Centers data loading and get and filter regions
   const centers = useLoaderData();
   const regions = centers.map((r) => r.region);
   const convertedRegions = [...new Set(regions)];
 
+  // filter district name by region
   const wirehouseByRegion = (region) => {
     const wirehouseByRegion = centers.filter((c) => c.region === region);
     const wirehouses = wirehouseByRegion.map((w) => w.district);
     return wirehouses;
   };
 
+  // Add parcel to database
   const handleAddParcel = (data) => {
+    // Delivery charge logic
     let charge = 0;
     if (data.parcelType === "Document") {
       charge = data.senderDistrict === data.receiverDistrict ? 60 : 80;
@@ -45,6 +52,9 @@ const AddParcel = () => {
             : 150 + extraWeight * 40 + 40;
       }
     }
+    data.deliveryCharge = charge;
+
+    // after clicking the action button
     Swal.fire({
       title: "Agree with delivery charge?",
       text: `You have to pay ${charge}`,
@@ -55,6 +65,8 @@ const AddParcel = () => {
       confirmButtonText: "Yes, Continue",
     }).then((result) => {
       if (result.isConfirmed) {
+        
+        // Add data using axios secure
         axiosSecure.post("/parcels", data).then((res) => {
           if (res.data.insertedId) {
             Swal.fire({
