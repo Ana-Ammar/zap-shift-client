@@ -8,6 +8,9 @@ import Register from "../Pages/Auth/Register";
 import AddParcel from "../Pages/Add_Parcel/AddParcel";
 import Dashboard from "../Layouts/Dashboard";
 import AllDeliveries from "../Pages/Dashboard/AllDeliveries";
+import ParcelDetails from "../Pages/Dashboard/ParcelDetails";
+import PaymentSuccess from "../Pages/Dashboard/PaymentSuccess";
+import PaymentCancel from "../Pages/Dashboard/PaymentCancel";
 
 export const router = createBrowserRouter([
   {
@@ -20,37 +23,53 @@ export const router = createBrowserRouter([
       },
       {
         path: "/coverage",
-        element: <Coverage />
+        element: <Coverage />,
       },
       {
         path: "/add-parcel",
-        loader: () => fetch('/warehouses.json'),
-        element: <AddParcel />
-      }
+        loader: () => fetch("/warehouses.json"),
+        element: <AddParcel />,
+      },
     ],
   },
+
+  // Auth Layout
   {
     path: "/",
     element: <AuthLayout />,
     children: [
       {
         path: "/login",
-        element: <Login />
+        element: <Login />,
       },
       {
         path: "/register",
-        element: <Register />
-      }
-    ]
+        element: <Register />,
+      },
+    ],
   },
+
+  // Router for Dashboard Layout
   {
     path: "/dashboard",
     element: <Dashboard />,
     children: [
       {
         path: "all-deliveries",
-        element: <AllDeliveries />
+        element: <AllDeliveries />,
+      },
+      {
+        path: "parcel-details/:id",
+        element: <ParcelDetails />,
+      },
+      {
+        path: "payment-success",
+        element: <PaymentSuccess />
+      },
+      {
+        path: "payment-cancel",
+        element: <PaymentCancel />
       }
-    ]
-  }
+    ],
+  },
 ]);

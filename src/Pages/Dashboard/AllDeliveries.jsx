@@ -2,20 +2,61 @@ import React, { use } from "react";
 import { AuthContext } from "../../AuthProvider/AuthContext";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router";
+import Swal from "sweetalert2";
 
 const AllDeliveries = () => {
   const { user } = use(AuthContext);
   const axiosSecure = useAxiosSecure();
 
   // Data show in table using tanstack query
-  const {data: deliveries = []} = useQuery({
+  const { data: deliveries = [], refetch } = useQuery({
     queryKey: ["all-deliveries", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/parcels?email=${user?.email}`);
-      console.log(res.data)
       return res.data;
     },
   });
+
+  // delete data from database using tanstack query
+  const handleDeleteBtn = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Axios for delete
+        axiosSecure.delete(`/parcels/${id}`).then((res) => {
+          if (res.data.deletedCount) {
+            refetch();
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your file has been deleted.",
+              icon: "success",
+            });
+          }
+        });
+      }
+    });
+  };
+
+  // Payment system using strips
+  const handlePayment = async (parcel) => {
+    const paymentInfo = {
+      parcelId: parcel._id,
+      parcelName: parcel.parcelName,
+      deliveryCharge: parcel.deliveryCharge,
+      senderEmail: parcel.senderEmail,
+    };
+
+    const res = await axiosSecure.post("/payment-checkout-session", paymentInfo);
+    window.location.assign(res.data.url);
+  };
 
   return (
     <div className="bg-base-100 p-8 m-4 rounded-lg">
@@ -42,25 +83,41 @@ const AllDeliveries = () => {
             {deliveries.map((d, index) => (
               <tr key={index} className="hover:bg-gray-50">
                 <td></td>
-                 <td>
+                <td>
                   <p className="font-semibold">{d.parcelName}</p>
                 </td>
                 <td>{d.senderName}</td>
 
-                <td><p>{d.receiverName}</p></td>
+                <td>
+                  <p>{d.receiverName}</p>
+                </td>
 
                 <td className={`${d.paymentColor} font-semibold`}>
-                  {d.payment}
+                  {d.deliveryCharge || 0}
                 </td>
 
                 <td className="flex gap-2">
-                  <button className="btn bg-primary btn-sm border-0">
-                    Pay
-                  </button>
-                  <button className="btn bg-[#94C6CB50] border-0 btn-sm">
+                  {d.paymentStatus === "Paid" ? (
+                    <span className="badge badge-success">Paid</span>
+                  ) : (
+                    <button
+                      onClick={() => handlePayment(d)}
+                      className="btn bg-primary btn-sm border-0"
+                    >
+                      Pay
+                    </button>
+                  )}
+
+                  <Link
+                    to={`/dashboard/parcel-details/${d._id}`}
+                    className="btn bg-[#94C6CB50] border-0 btn-sm"
+                  >
                     View
-                  </button>
-                  <button className="btn bg-[#E8333020] btn-sm border-0  text-red-500">
+                  </Link>
+                  <button
+                    onClick={() => handleDeleteBtn(d._id)}
+                    className="btn bg-[#E8333020] btn-sm border-0  text-red-500"
+                  >
                     Delete
                   </button>
                 </td>

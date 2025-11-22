@@ -1,8 +1,9 @@
 import React from 'react';
-import { IoReorderThreeSharp } from 'react-icons/io5';
+import { IoArrowBackOutline, IoReorderThreeSharp } from 'react-icons/io5';
 import Logo from '../Components/Logo/Logo';
 import { AiOutlineDeliveredProcedure } from 'react-icons/ai';
 import { NavLink, Outlet } from 'react-router';
+import { BsBackspaceReverse } from 'react-icons/bs';
 
 const Dashboard = () => {
     return (
@@ -10,11 +11,12 @@ const Dashboard = () => {
   <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
   <div className="drawer-content">
     {/* Navbar */}
-    <nav className="navbar w-full bg-base-100">
+    <nav className="navbar w-full bg-base-100 justify-between px-6">
       <label htmlFor="my-drawer-4" aria-label="open sidebar" className="btn btn-square btn-ghost">
         {/* Sidebar toggle icon */}
         <IoReorderThreeSharp size={32} />
       </label>
+      <NavLink to="/" className="button flex justify-center items-center gap-1"> <IoArrowBackOutline size={22}/>Back to Home</NavLink>
     </nav>
 
 
