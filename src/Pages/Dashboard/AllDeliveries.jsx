@@ -73,7 +73,6 @@ const AllDeliveries = () => {
               <th>Parcel Name</th>
               <th>Sender Info</th>
               <th>Receiver Info</th>
-              <th>Delivery Status</th>
               <th>Payment</th>
               <th>Action</th>
             </tr>
@@ -97,8 +96,8 @@ const AllDeliveries = () => {
                 </td>
 
                 <td className="flex gap-2">
-                  {d.paymentStatus === "Paid" ? (
-                    <span className="badge badge-success">Paid</span>
+                  {d.paymentStatus === "paid" ? (
+                    <span className="badge badge-success font-medium text-white">Paid</span>
                   ) : (
                     <button
                       onClick={() => handlePayment(d)}

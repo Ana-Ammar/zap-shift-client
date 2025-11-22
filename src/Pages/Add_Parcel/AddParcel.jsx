@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { AuthContext } from "../../AuthProvider/AuthContext";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
@@ -9,12 +9,14 @@ const AddParcel = () => {
   const { user } = useContext(AuthContext);
   const axiosSecure = useAxiosSecure();
   const [parcelType, setParcelType] = useState("Document");
+  const navigate = useNavigate()
 
   // react form hook
   const {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -74,6 +76,8 @@ const AddParcel = () => {
               text: "Delivery proccess will be start soon.",
               icon: "success",
             });
+            reset()
+            navigate('/dashboard/all-deliveries')
           }
         });
       }
