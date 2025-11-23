@@ -12,6 +12,7 @@ import ParcelDetails from "../Pages/Dashboard/ParcelDetails";
 import PaymentSuccess from "../Pages/Dashboard/PaymentSuccess";
 import PaymentCancel from "../Pages/Dashboard/PaymentCancel";
 import PaymentHistory from "../Pages/Dashboard/PaymentHistory";
+import BeRider from "../Pages/BeARider/BeRider";
 
 export const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ export const router = createBrowserRouter([
         loader: () => fetch("/warehouses.json"),
         element: <AddParcel />,
       },
+      {
+        path: "/be-rider",
+        element: <BeRider />
+      }
     ],
   },
 

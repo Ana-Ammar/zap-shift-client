@@ -34,6 +34,9 @@ const Navbar = () => {
       <li>
         <NavLink to="/add-parcel">Add parcel</NavLink>
       </li>
+      <li>
+        <NavLink to="/be-rider">Be A Rider</NavLink>
+      </li>
 
       <li>
         <NavLink to="/dashboard/all-deliveries">My Parcels</NavLink>
