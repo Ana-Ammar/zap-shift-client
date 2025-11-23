@@ -6,9 +6,11 @@ import { AuthContext } from "../../AuthProvider/AuthContext";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const Register = () => {
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
   const { createUser, updateUserProfile } = useContext(AuthContext);
   const {
     register,
@@ -21,20 +23,34 @@ const Register = () => {
 
     createUser(data.email, data.password)
       .then((res) => {
+        // upload image
         const formData = new FormData();
         formData.append("image", uploadedImg);
 
+        // image post to imagebb and link create
         const image_api = `https://api.imgbb.com/1/upload?key=${
           import.meta.env.VITE_image_host_key
         }`;
 
         axios.post(image_api, formData).then((res) => {
+          
+          // Add user to database
+          const userInfo = {
+            email: data.email,
+            displayName: data.name,
+            photoURL: res.data.data.url,
+          };
+          axiosSecure.post("/users", userInfo).then((res) => {
+            if (res.data.insertedId) {
+              console.log("user created in the database");
+            }
+          });
 
+          // update user profile
           const updatedData = {
             displayName: data.name,
             photoURL: res.data.data.url,
           };
-
           updateUserProfile(updatedData)
             .then(() => {
               Swal.fire({

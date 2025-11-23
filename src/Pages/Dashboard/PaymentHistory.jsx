@@ -1,22 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useContext } from "react";
-import { AuthContext } from "../../AuthProvider/AuthContext";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { Link } from "react-router";
+import useAuth from "../../Hooks/useAuth";
 
 const PaymentHistory = () => {
-  const { user } = useContext(AuthContext);
   const axiosSecure = useAxiosSecure();
-
+  const { user } = useAuth();
   const { data: paymentData = [] } = useQuery({
     queryKey: ["payments", user?.email],
+    enabled: !!user?.email,
     queryFn: async () => {
       const res = await axiosSecure.get(`/payments?email=${user?.email}`);
       return res.data;
     },
   });
 
-  console.log(paymentData)
   return (
     <div className="bg-base-100 p-8 m-4 rounded-lg">
       <h1 className="text-secondary text-5xl font-extrabold mb-8">
@@ -52,9 +50,7 @@ const PaymentHistory = () => {
                 </td>
 
                 <td className="">
-                  <Link
-                    className="btn bg-[#94C6CB50] border-0 btn-sm"
-                  >
+                  <Link className="btn bg-[#94C6CB50] border-0 btn-sm">
                     View
                   </Link>
                 </td>

@@ -3,11 +3,13 @@ import { FcGoogle } from "react-icons/fc";
 import { AuthContext } from "../../AuthProvider/AuthContext";
 import Swal from "sweetalert2";
 import { useLocation, useNavigate } from "react-router";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const GoogleLoginBtn = () => {
   const { loginUserWithGoogle } = useContext(AuthContext);
-  const navigate = useNavigate()
-  const location = useLocation()
+  const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleGoogleLogin = () => {
     loginUserWithGoogle()
@@ -19,8 +21,20 @@ const GoogleLoginBtn = () => {
           showConfirmButton: false,
           timer: 1500,
         });
-        navigate(location.state || "/")
+        // Add user to database
+        const userInfo = {
+          email: res.user.email,
+          displayName: res.user.displayName,
+          photoURL: res.user.photoURL,
+        };
+        axiosSecure.post("/users", userInfo).then((res) => {
+          if (res.data.insertedId) {
+            console.log("user created in the database");
+          }
+        });
+        navigate(location.state || "/");
       })
+
       .catch((err) => {
         Swal.fire({
           position: "top-end",
