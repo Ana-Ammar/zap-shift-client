@@ -13,6 +13,8 @@ import PaymentSuccess from "../Pages/Dashboard/PaymentSuccess";
 import PaymentCancel from "../Pages/Dashboard/PaymentCancel";
 import PaymentHistory from "../Pages/Dashboard/PaymentHistory";
 import BeRider from "../Pages/BeARider/BeRider";
+import RiderRequests from "../Pages/Dashboard/rider_request/RiderRequests";
+import UsersManagement from "../Pages/Dashboard/users_management/UsersManagement";
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +36,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/be-rider",
+        loader: () => fetch("/warehouses.json"),
         element: <BeRider />
       }
     ],
@@ -79,6 +82,14 @@ export const router = createBrowserRouter([
       {
         path: "payment-history",
         element: <PaymentHistory />
+      },
+      {
+        path: "rider-requests",
+        element: <RiderRequests />
+      },
+      {
+        path: "users-management",
+        element: <UsersManagement />
       }
     ],
   },

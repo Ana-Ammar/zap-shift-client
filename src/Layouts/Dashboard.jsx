@@ -3,6 +3,7 @@ import { IoArrowBackOutline, IoReorderThreeSharp } from "react-icons/io5";
 import Logo from "../Components/Logo/Logo";
 import { AiOutlineDeliveredProcedure } from "react-icons/ai";
 import { NavLink, Outlet } from "react-router";
+import { FaMotorcycle, FaUsers } from "react-icons/fa6";
 import { MdOutlineHistoryEdu } from "react-icons/md";
 
 const Dashboard = () => {
@@ -70,6 +71,30 @@ const Dashboard = () => {
                 <span className="is-drawer-close:hidden">Payment History</span>
               </NavLink>
             </li>
+
+             <li>
+              <NavLink
+                to="rider-requests"
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="Rider Requests"
+              >
+                <FaMotorcycle size={24}/>
+                <span className="is-drawer-close:hidden">Rider Requests</span>
+              </NavLink>
+            </li>
+
+              <li>
+              <NavLink
+                to="users-management"
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="Users Management"
+              >
+                <FaUsers size={24}/>
+                <span className="is-drawer-close:hidden">Users Management</span>
+              </NavLink>
+            </li>
+
+
 
           </ul>
         </div>
