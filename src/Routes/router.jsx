@@ -15,6 +15,8 @@ import PaymentHistory from "../Pages/Dashboard/PaymentHistory";
 import BeRider from "../Pages/BeARider/BeRider";
 import RiderRequests from "../Pages/Dashboard/rider_request/RiderRequests";
 import UsersManagement from "../Pages/Dashboard/users_management/UsersManagement";
+import PrivateRoute from "./PrivateRoute";
+import AdminRoute from "./AdminRoute";
 
 export const router = createBrowserRouter([
   {
@@ -37,8 +39,8 @@ export const router = createBrowserRouter([
       {
         path: "/be-rider",
         loader: () => fetch("/warehouses.json"),
-        element: <BeRider />
-      }
+        element: <BeRider />,
+      },
     ],
   },
 
@@ -61,7 +63,11 @@ export const router = createBrowserRouter([
   // Router for Dashboard Layout
   {
     path: "/dashboard",
-    element: <Dashboard />,
+    element: (
+      <PrivateRoute>
+        <Dashboard />
+      </PrivateRoute>
+    ),
     children: [
       {
         path: "all-deliveries",
@@ -73,24 +79,32 @@ export const router = createBrowserRouter([
       },
       {
         path: "payment-success",
-        element: <PaymentSuccess />
+        element: <PaymentSuccess />,
       },
       {
         path: "payment-cancel",
-        element: <PaymentCancel />
+        element: <PaymentCancel />,
       },
       {
         path: "payment-history",
-        element: <PaymentHistory />
+        element: <PaymentHistory />,
       },
       {
         path: "rider-requests",
-        element: <RiderRequests />
+        element: (
+          <AdminRoute>
+            <RiderRequests />
+          </AdminRoute>
+        ),
       },
       {
         path: "users-management",
-        element: <UsersManagement />
-      }
+        element: (
+          <AdminRoute>
+            <UsersManagement />
+          </AdminRoute>
+        ),
+      },
     ],
   },
 ]);

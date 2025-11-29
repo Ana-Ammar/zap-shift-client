@@ -5,8 +5,11 @@ import { AiOutlineDeliveredProcedure } from "react-icons/ai";
 import { NavLink, Outlet } from "react-router";
 import { FaMotorcycle, FaUsers } from "react-icons/fa6";
 import { MdOutlineHistoryEdu } from "react-icons/md";
+import useRole from "../Hooks/useRole";
 
 const Dashboard = () => {
+  const { role } = useRole();
+
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -67,35 +70,41 @@ const Dashboard = () => {
                 className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
                 data-tip="Payment History"
               >
-                <MdOutlineHistoryEdu size={24}/>
+                <MdOutlineHistoryEdu size={24} />
                 <span className="is-drawer-close:hidden">Payment History</span>
               </NavLink>
             </li>
 
-             <li>
-              <NavLink
-                to="rider-requests"
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="Rider Requests"
-              >
-                <FaMotorcycle size={24}/>
-                <span className="is-drawer-close:hidden">Rider Requests</span>
-              </NavLink>
-            </li>
 
-              <li>
-              <NavLink
-                to="users-management"
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="Users Management"
-              >
-                <FaUsers size={24}/>
-                <span className="is-drawer-close:hidden">Users Management</span>
-              </NavLink>
-            </li>
+            {role.role === 'admin' && (
+              <>
+                <li>
+                  <NavLink
+                    to="rider-requests"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Rider Requests"
+                  >
+                    <FaMotorcycle size={24} />
+                    <span className="is-drawer-close:hidden">
+                      Rider Requests
+                    </span>
+                  </NavLink>
+                </li>
 
-
-
+                <li>
+                  <NavLink
+                    to="users-management"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Users Management"
+                  >
+                    <FaUsers size={24} />
+                    <span className="is-drawer-close:hidden">
+                      Users Management
+                    </span>
+                  </NavLink>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

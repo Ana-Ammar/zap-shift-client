@@ -1,7 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
-import { Link } from "react-router";
 import { FaUserShield } from "react-icons/fa6";
 import { BsFillShieldSlashFill } from "react-icons/bs";
 import Swal from "sweetalert2";
